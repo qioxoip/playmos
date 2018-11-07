@@ -78,7 +78,7 @@ void setup() {
 
 }
 
-void HoleZeit() {
+unsigned long HoleZeit() {
  {
   //get a random server from the pool
   WiFi.hostByName(ntpServerName, timeServerIP); 
@@ -135,10 +135,10 @@ void HoleZeit() {
     Serial.println(epoch % 60); // print the second
   }
   // wait ten seconds before asking for the time again
-  unsigned long akteit = epoch;
+
   delay(10000);
 }
-  
+  return epoch; 
 }
 
 void loop() {
@@ -147,15 +147,16 @@ void loop() {
   
  
   while (client.connected()) {
-  HoleZeit();
   client.println("<!DOCTYPE HTML>");
   client.println("<html>");
   client.println("<head><meta http-equiv=refresh content=15></head><body bgcolor=33363B><center><h1><font face=Ubuntu color=FFFFFF>Wemos D1 Mini DS18B20</h1><h3>WiFi Network: ");
   client.println(ssid);
   client.println("IP: ");
   client.println(WiFi.localIP());
-  client.println(" </font></h3></center></body></html>");
+  
   client.println("Zeit: ");
+  client.println(HoleZeit());
+  client.println(" </font></h3></center></body></html>");
   break;
  }
 
